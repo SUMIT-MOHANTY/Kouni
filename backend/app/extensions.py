@@ -77,6 +77,14 @@ def _register_namespaces():
     # Import and register auth namespace
     from .api.auth import auth_ns
     api.add_namespace(auth_ns, path='/auth')
+    
+    # Import and register tasks namespace
+    from .api.tasks import tasks_ns
+    api.add_namespace(tasks_ns, path='/tasks')
+    
+    # Import and register categories namespace
+    from .api.categories import categories_ns
+    api.add_namespace(categories_ns, path='/categories')
 
 
 def get_db():
