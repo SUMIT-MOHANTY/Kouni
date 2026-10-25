@@ -14,10 +14,17 @@ Environment Variables:
     JWT_SECRET_KEY: JWT signing secret (required for production)
 """
 import os
+import sys
+
+# Add the backend directory to the path so 'app' can be imported
+backend_dir = os.path.dirname(os.path.abspath(__file__))
+if backend_dir not in sys.path:
+    sys.path.insert(0, backend_dir)
+
 from app import create_app
 
 # Get configuration from environment
-config_name = os.environ.get('FLASK_ENV', 'production')
+config_name = os.environ.get('FLASK_ENV', 'development')
 
 # Create the Flask application instance
 app = create_app(config_name)
