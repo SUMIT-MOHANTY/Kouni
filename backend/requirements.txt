@@ -30,3 +30,7 @@ pytest-cov==4.1.0
 
 # Production Server
 gunicorn==21.2.0
+
+# ASGI Server (for uvicorn connectivity gate)
+uvicorn==0.25.0
+asgiref==3.7.2
