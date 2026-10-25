@@ -8,6 +8,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_login import LoginManager
 from flask_cors import CORS
+from flask_restx import Api
 
 
 # SQLAlchemy 2.0 ORM instance
@@ -21,6 +22,15 @@ login_manager = LoginManager()
 
 # CORS extension for cross-origin requests
 cors = CORS()
+
+# Flask-RESTX API instance
+api = Api(
+    version='1.0',
+    title='Todo Application API',
+    description='RESTful API for the Todo Application',
+    doc='/api/docs',
+    prefix='/api'
+)
 
 
 def init_extensions(app):
@@ -50,6 +60,23 @@ def init_extensions(app):
         allow_headers=['Content-Type', 'Authorization', 'X-Requested-With'],
         methods=['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS']
     )
+    
+    # Initialize Flask-RESTX API with app
+    api.init_app(app)
+    
+    # Register API namespaces
+    _register_namespaces()
+
+
+def _register_namespaces():
+    """
+    Register Flask-RESTX namespaces with the API instance.
+    
+    Namespaces are registered here to avoid circular imports.
+    """
+    # Import and register auth namespace
+    from .api.auth import auth_ns
+    api.add_namespace(auth_ns, path='/auth')
 
 
 def get_db():
@@ -90,3 +117,13 @@ def get_cors():
         CORS: The CORS extension instance
     """
     return cors
+
+
+def get_api():
+    """
+    Get the Flask-RESTX API instance.
+    
+    Returns:
+        Api: The RESTX API extension instance
+    """
+    return api
