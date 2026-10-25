@@ -175,16 +175,15 @@ class UserSession(db.Model):
     def __repr__(self) -> str:
         """String representation of UserSession."""
         return f"<UserSession(id={self.id}, user_id={self.user_id}, is_active={self.is_active()})>"
-
-
-# Add sessions relationship to User model (circular import safe)
-# This will be imported and attached after User model is defined
-def _attach_user_relationship():
-    """Attach sessions relationship to User model after both are defined."""
-    from .user import User
-    User.sessions = relationship(
-        'UserSession',
-        back_populates='user',
-        cascade='all, delete-orphan',
-        lazy='dynamic'
-    )
+    
+    @staticmethod
+    def _attach_user_relationship():
+        """Attach sessions relationship to User model after both are defined."""
+        from .user import User
+        from sqlalchemy.orm import relationship
+        User.sessions = relationship(
+            'UserSession',
+            back_populates='user',
+            cascade='all, delete-orphan',
+            lazy='dynamic'
+        )
