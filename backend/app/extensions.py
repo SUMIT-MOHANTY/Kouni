@@ -20,11 +20,12 @@ settings = get_settings()
 
 # Create async PostgreSQL engine with connection pooling
 # Using asyncpg driver for native async PostgreSQL support
+# Connection pool: min 5, max 20 as per HLD scalability requirements
 engine = create_async_engine(
     str(settings.database_url),
-    pool_size=settings.database_pool_size,
-    max_overflow=settings.database_max_overflow,
-    pool_timeout=settings.database_pool_timeout,
+    pool_size=settings.database_pool_size,      # Minimum: 5 connections
+    max_overflow=settings.database_max_overflow, # Maximum overflow: 20 connections
+    pool_timeout=settings.database_pool_timeout, # Timeout: 30 seconds
     pool_pre_ping=True,  # Verify connections before using from pool
     echo=settings.database_echo,
     future=True,  # SQLAlchemy 2.0 style
